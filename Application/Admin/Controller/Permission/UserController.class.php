@@ -29,8 +29,6 @@ class UserController extends BaseController
 
     public function accountEdit()
     {
-        //a704b723f46023fb800fa88f3f83bddc
-        
         if(IS_POST){
             $account = I('post.account');
             $password=I('post.password');
