@@ -1,0 +1,51 @@
+<?php
+
+namespace Admin\Controller\Common;
+
+use Think\Controller;
+
+class IndexController extends Controller
+{
+    public function login()
+    {
+        // $salt = substr(md5(uniqid(true)), 0, 4);
+        // $newPassword = md5(md5('123456') . $salt);
+        if (IS_POST) {
+            $account = I('post.account');
+            $password = I('post.password');
+            $verify = I('post.verify');
+            $user = M('User')->where(['account' => $account])->find();
+            if (!$user) {
+                $this->error('用户不存在');
+            } else {
+                if ($user['password'] === md5(md5($password) . $user['salt'])) {
+                    if ($this->checkVerify($verify)) {
+                        unset($user['password'], $user['salt']);
+                        session('user', $user);
+                        $this->success('登录成功', U('admin/index/index/index'));
+                    } else {
+                        $this->error('验证码错误');
+                    }
+                } else {
+                    $this->error('密码错误');
+                }
+            }
+        } else {
+            $this->display();
+        }
+    }
+
+    public function verify()
+    {
+        $verify = new \Think\Verify();
+        $verify->length   = 4;
+        $verify->entry();
+    }
+
+    // 检测输入的验证码是否正确，$code为用户输入的验证码字符串
+    private function checkVerify($code, $id = '')
+    {
+        $verify = new \Think\Verify();
+        return $verify->check($code, $id);
+    }
+}

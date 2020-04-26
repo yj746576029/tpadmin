@@ -10,6 +10,7 @@ class UserController extends BaseController
     {
         $this->display();
     }
+
     public function add()
     {
         $this->display();
