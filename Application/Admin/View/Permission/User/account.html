@@ -1,0 +1,31 @@
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		我的账号
+		<span class="c-gray en">&gt;</span>
+		详情 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+			href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<article class="cl pd-20">
+		<form action="" method="post" class="form form-horizontal" id="form-admin-add">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">管理员：</label>
+				<div class="formControls col-xs-6 col-sm-7">
+					<span style="line-height: 28px;">{$Think.session.user.account}</span>
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">手机：</label>
+				<div class="formControls col-xs-6 col-sm-7">
+					<span style="line-height: 28px;">{$Think.session.user.mobile|default="暂无"}</span>
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3">邮箱：</label>
+				<div class="formControls col-xs-6 col-sm-7">
+					<span style="line-height: 28px;">{$Think.session.user.email|default="暂无"}</span>
+				</div>
+			</div>
+		</form>
+	</article>
+</section>

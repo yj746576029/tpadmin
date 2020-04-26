@@ -35,6 +35,12 @@ class IndexController extends Controller
         }
     }
 
+    public function logout()
+    {
+        session('user', null);
+        $this->success('退出成功', U('admin/common/index/login'));
+    }
+
     public function verify()
     {
         $verify = new \Think\Verify();
