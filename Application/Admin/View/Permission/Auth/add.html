@@ -1,0 +1,88 @@
+<section class="Hui-article-box">
+	<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		权限管理
+		<span class="c-gray en">&gt;</span>
+		权限规则 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+			href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<article class="cl pd-20">
+		<form action="{:U('admin/permission/auth/add')}" method="post" class="form form-horizontal" id="form-admin-add">
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>上级：</label>
+				<div class="formControls col-xs-6 col-sm-7"> <span class="select-box" style="width:150px;">
+						<select class="select" name="parent_id" size="1">
+							<option value="0" checked>---顶级---</option>
+							<foreach name="list" item="item1" key="key1">
+								<option value="{$item1['id']}">{$item1['auth_name']}</option>
+								<foreach name="item1.children" item="item2" key="key2">
+									<option value="{$item2['id']}">&emsp;└&emsp;{$item2['auth_name']}</option>
+								</foreach>
+							</foreach>
+						</select>
+					</span>
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>权限名称：</label>
+				<div class="formControls col-xs-6 col-sm-7">
+					<input type="text" class="input-text" value="" placeholder=""  name="auth_name">
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>规则：</label>
+				<div class="formControls col-xs-6 col-sm-7">
+					<input type="text" class="input-text"  value="" placeholder="规则" name="rule">
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>状态：</label>
+				<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+					<div class="radio-box">
+						<input type="radio" value="1" name="status" checked>
+						<label for="sex-1">开启</label>
+					</div>
+					<div class="radio-box">
+						<input type="radio" value="0" name="status">
+						<label for="sex-2">关闭</label>
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+					<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+				</div>
+			</div>
+		</form>
+	</article>
+</section>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="__PUBLIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+	$(function () {
+		$("#form-admin-add").validate({
+			rules: {
+				parent_id: {
+					required: true,
+				},
+				auth_name: {
+					required: true,
+				},
+				rule: {
+					required: true,
+				},
+				status: {
+					required: true,
+				},
+			},
+			onkeyup: false,
+			focusCleanup: true,
+			success: "valid",
+			submitHandler: function (form) {
+				form.submit();
+			}
+		});
+	});
+</script>
