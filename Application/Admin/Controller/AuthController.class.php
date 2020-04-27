@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Controller\Permission;
+namespace Admin\Controller;
 
 use Admin\Controller\BaseController;
 
@@ -23,7 +23,7 @@ class AuthController extends BaseController
             $data['parent_id']=I('post.parent_id');
             $re=M('auth')->add($data);
             if($re){
-                $this->success('新增成功', U('admin/permission/auth/index'));
+                $this->success('新增成功', U('admin/auth/index'));
             }else{
                 $this->error('新增失败');
             }

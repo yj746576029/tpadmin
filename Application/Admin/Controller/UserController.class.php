@@ -1,6 +1,6 @@
 <?php
 
-namespace Admin\Controller\Permission;
+namespace Admin\Controller;
 
 use Admin\Controller\BaseController;
 
@@ -39,7 +39,7 @@ class UserController extends BaseController
                 $re=M('User')->where(['account'=>$user['account']])->save($data);
                 if($re){
                     session('user', null);
-                    $this->success('修改成功，请重新登录', U('admin/common/index/login'));
+                    $this->success('修改成功，请重新登录', U('admin/login/index'));
                 }else{
                     $this->error('修改失败');
                 }

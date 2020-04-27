@@ -124,16 +124,16 @@
 	}
 	/*编辑*/
 	function add(id) {
-		location.href = "{:U('admin/permission/auth/add')}";
+		location.href = "{:U('admin/auth/add')}";
 	}
 	/*编辑*/
 	function edit(id) {
-		location.href = "{:U('admin/permission/auth/edit/id/" + id + "')}";
+		location.href = "{:U('admin/auth/edit/id/" + id + "')}";
 	}
 	/*删除*/
 	function del(id) {
 		layer.confirm('角色删除须谨慎，确认要删除吗？', function (index) {
-			location.href = "{:U('admin/permission/auth/del/id/" + id + "')}";
+			location.href = "{:U('admin/auth/del/id/" + id + "')}";
 		});
 	}
 </script>

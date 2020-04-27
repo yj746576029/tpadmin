@@ -1,12 +1,12 @@
 <?php
 
-namespace Admin\Controller\Common;
+namespace Admin\Controller;
 
 use Think\Controller;
 
-class IndexController extends Controller
+class LoginController extends Controller
 {
-    public function login()
+    public function index()
     {
         // $salt = substr(md5(uniqid(true)), 0, 4);
         // $newPassword = md5(md5('123456') . $salt);
@@ -22,7 +22,7 @@ class IndexController extends Controller
                     if ($this->checkVerify($verify)) {
                         unset($user['password'], $user['salt']);
                         session('user', $user);
-                        $this->success('登录成功', U('admin/index/index/index'));
+                        $this->success('登录成功', U('admin/index/index'));
                     } else {
                         $this->error('验证码错误');
                     }
@@ -38,7 +38,7 @@ class IndexController extends Controller
     public function logout()
     {
         session('user', null);
-        $this->success('退出成功', U('admin/common/index/login'));
+        $this->success('退出成功', U('admin/login/index'));
     }
 
     public function verify()

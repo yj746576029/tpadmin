@@ -3,7 +3,7 @@
 <header class="navbar-wrapper">
     <div class="navbar navbar-fixed-top">
         <div class="container-fluid cl">
-            <a class="logo navbar-logo f-l mr-10 hidden-xs" href="{:U('admin/index/index/index')}">后台管理</a>
+            <a class="logo navbar-logo f-l mr-10 hidden-xs" href="{:U('admin/index/index')}">后台管理</a>
             <span class="logo navbar-slogan f-l mr-10 hidden-xs">v1.0</span>
             <a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
             <nav class="nav navbar-nav">
@@ -27,10 +27,10 @@
                     <li class="dropDown dropDown_hover"> <a href="#" class="dropDown_A">{$Think.session.user.account}<i
                                 class="Hui-iconfont">&#xe6d5;</i></a>
                         <ul class="dropDown-menu menu radius box-shadow">
-                            <li><a href="{:U('admin/permission/user/account')}">个人信息</a></li>
-                            <li><a href="{:U('admin/permission/user/accountEdit')}">修改密码</a></li>
+                            <li><a href="{:U('admin/user/account')}">个人信息</a></li>
+                            <li><a href="{:U('admin/user/accountEdit')}">修改密码</a></li>
                             <!-- <li><a href="#">切换账户</a></li> -->
-                            <li><a href="{:U('admin/common/index/logout')}">退出</a></li>
+                            <li><a href="{:U('admin/login/logout')}">退出</a></li>
                         </ul>
                     </li>
                     <li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i

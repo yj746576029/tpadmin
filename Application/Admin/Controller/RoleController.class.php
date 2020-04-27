@@ -1,5 +1,5 @@
 <?php
-namespace Admin\Controller\Permission;
+namespace Admin\Controller;
 use Admin\Controller\BaseController;
 
 class RoleController extends BaseController {

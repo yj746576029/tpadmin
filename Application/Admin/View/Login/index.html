@@ -25,7 +25,7 @@
 <div class="header"></div>
 <div class="loginWraper">
 	<div id="loginform" class="loginBox">
-		<form class="form form-horizontal" action="{:U('admin/common/index/login')}" method="post">
+		<form class="form form-horizontal" action="{:U('admin/login/index')}" method="post">
 			<div class="row cl">
 				<label class="form-label col-xs-3"><i class="Hui-iconfont">&#xe60d;</i></label>
 				<div class="formControls col-xs-8">
@@ -41,7 +41,7 @@
 			<div class="row cl">
 				<div class="formControls col-xs-8 col-xs-offset-3">
 					<input name="verify" class="input-text size-L" type="text" placeholder="验证码"  style="width:130px;">
-					<img id="verify" width="130" src="{:U('admin/common/index/verify')}">
+					<img id="verify" width="130" src="{:U('admin/login/verify')}">
 					<a id="kanbuq" href="javascript:changeVerify();">看不清，换一张</a>
 				</div>
 			</div>
@@ -67,7 +67,7 @@
 <script type="text/javascript" src="__PUBLIC__/static/h-ui/js/H-ui.js"></script>
 <script>
     function changeVerify(){
-        $('#verify').attr('src',"{:U('admin/common/index/verify')}");
+        $('#verify').attr('src',"{:U('admin/login/verify')}");
     }
 </script>
 </body>
