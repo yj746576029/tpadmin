@@ -34,8 +34,14 @@
 									class="label label-{$item1['status']==1?'success':'default'} radius">{$item1['status']==1?'已启用':'已停用'}</span>
 							</td>
 							<td class="td-manage">
+								<if condition="$item1['status'] eq 1">
 								<a title="停用" onClick="stop(this,'{$item1[id]}')" style="text-decoration:none"
 									href="javascript:;"><i class="Hui-iconfont">&#xe631;</i></a>
+								</if>
+								<if condition="$item1['status'] eq 0">
+								<a title="启用" onClick="start(this,'{$item1[id]}')" style="text-decoration:none"
+									href="javascript:;"><i class="Hui-iconfont">&#xe615;</i></a>
+								</if>		
 								<a title="编辑" onClick="edit('{$item1[id]}')" class="ml-5" style="text-decoration:none"
 									href="javascript:;"><i class="Hui-iconfont">&#xe6df;</i></a>
 								<a title="删除" onClick="del('{$item1[id]}')" class="ml-5" style="text-decoration:none"
@@ -52,8 +58,14 @@
 										class="label label-{$item2['status']==1?'success':'default'} radius">{$item2['status']==1?'已启用':'已停用'}</span>
 								</td>
 								<td class="td-manage">
+									<if condition="$item2['status'] eq 1">
 									<a title="停用" onClick="stop(this,'{$item2[id]}')" style="text-decoration:none"
 										href="javascript:;"><i class="Hui-iconfont">&#xe631;</i></a>
+									</if>
+									<if condition="$item2['status'] eq 0">
+									<a title="启用" onClick="start(this,'{$item2[id]}')" style="text-decoration:none"
+										href="javascript:;"><i class="Hui-iconfont">&#xe615;</i></a>
+									</if>		
 									<a title="编辑" onClick="edit('{$item2[id]}')" class="ml-5"
 										style="text-decoration:none" href="javascript:;"><i
 											class="Hui-iconfont">&#xe6df;</i></a>
@@ -73,8 +85,14 @@
 											class="label label-{$item3['status']==1?'success':'default'} radius">{$item3['status']==1?'已启用':'已停用'}</span>
 									</td>
 									<td class="td-manage">
+										<if condition="$item3['status'] eq 1">
 										<a title="停用" onClick="stop(this,'{$item3[id]}')" style="text-decoration:none"
 											href="javascript:;"><i class="Hui-iconfont">&#xe631;</i></a>
+										</if>
+										<if condition="$item3['status'] eq 0">
+										<a title="启用" onClick="start(this,'{$item3[id]}')" style="text-decoration:none"
+											href="javascript:;"><i class="Hui-iconfont">&#xe615;</i></a>
+										</if>		
 										<a title="编辑" onClick="edit('{$item3[id]}')" class="ml-5"
 											style="text-decoration:none" href="javascript:;"><i
 												class="Hui-iconfont">&#xe6df;</i></a>
@@ -105,21 +123,53 @@
 		layer.confirm('确认要停用吗？', function (index) {
 			//此处请求后台程序，下方是成功后的前台处理……
 
-			$(obj).parents("tr").find(".td-manage").prepend('<a onClick="start(this,' + id + ')" href="javascript:;" title="启用" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>');
-			$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">已禁用</span>');
-			$(obj).remove();
-			layer.msg('已停用!', { icon: 5, time: 1000 });
+			$.ajax({
+				url: "{:U('admin/auth/edit')}",
+				type: 'post',
+				data: {
+					id: id,
+					status: 0,
+				},
+				success: function (re) {
+					if (re.code) {
+						$(obj).parents("tr").find(".td-manage").prepend('<a onClick="start(this,' + id + ')" href="javascript:;" title="启用" style="text-decoration:none"><i class="Hui-iconfont">&#xe615;</i></a>');
+						$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">已禁用</span>');
+						$(obj).remove();
+						layer.msg('已停用!', { icon: 6, time: 1000 });
+					} else {
+						layer.msg('操作失败!', { icon: 5, time: 1000 });
+					}
+
+				}
+			})
+
+
 		});
 	}
 	/*启用*/
 	function start(obj, id) {
 		layer.confirm('确认要启用吗？', function (index) {
 			//此处请求后台程序，下方是成功后的前台处理……
+			$.ajax({
+				url: "{:U('admin/auth/edit')}",
+				type: 'post',
+				data: {
+					id: id,
+					status: 1,
+				},
+				success: function (re) {
+					if (re.code) {
+						$(obj).parents("tr").find(".td-manage").prepend('<a onClick="stop(this,' + id + ')" href="javascript:;" title="停用" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>');
+						$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
+						$(obj).remove();
+						layer.msg('已启用!', { icon: 6, time: 1000 });
+					} else {
+						layer.msg('操作失败!', { icon: 5, time: 1000 });
+					}
 
-			$(obj).parents("tr").find(".td-manage").prepend('<a onClick="stop(this,' + id + ')" href="javascript:;" title="停用" style="text-decoration:none"><i class="Hui-iconfont">&#xe631;</i></a>');
-			$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已启用</span>');
-			$(obj).remove();
-			layer.msg('已启用!', { icon: 6, time: 1000 });
+				}
+			})
+
 		});
 	}
 	/*编辑*/
@@ -132,7 +182,7 @@
 	}
 	/*删除*/
 	function del(id) {
-		layer.confirm('角色删除须谨慎，确认要删除吗？', function (index) {
+		layer.confirm('权限删除须谨慎，确认要删除吗？', function (index) {
 			location.href = "{:U('admin/auth/del/id/" + id + "')}";
 		});
 	}
