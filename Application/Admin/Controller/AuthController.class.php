@@ -21,6 +21,8 @@ class AuthController extends BaseController
             $data['rule'] = I('post.rule');
             $data['status'] = I('post.status');
             $data['parent_id'] = I('post.parent_id');
+            $data['create_time'] = time();
+            $data['update_time'] = $data['create_time'];
             $re = M('Auth')->add($data);
             if ($re) {
                 $this->success('新增成功', U('admin/auth/index'));
@@ -41,6 +43,7 @@ class AuthController extends BaseController
             if(IS_AJAX){
                 $id = I('post.id');
                 $data['status'] = I('post.status');
+                $data['update_time'] = time();
                 $re = M('Auth')->where(['id' => $id])->save($data);
                 if ($re) {
                     $this->ajaxReturn(['code'=>1,'msg'=>'成功']);
@@ -53,6 +56,7 @@ class AuthController extends BaseController
                 $data['rule'] = I('post.rule');
                 $data['status'] = I('post.status');
                 $data['parent_id'] = I('post.parent_id');
+                $data['update_time'] = time();
                 $re = M('Auth')->where(['id' => $id])->save($data);
                 if ($re) {
                     $this->success('编辑成功', U('admin/auth/index'));
