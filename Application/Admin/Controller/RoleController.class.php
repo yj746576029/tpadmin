@@ -9,6 +9,7 @@ class RoleController extends BaseController
     public function index()
     {
         $list = M('Role')->select();
+        $this->assign('empty','<tr class="text-c"><td colspan="4">数据为空</td></tr>');
         $this->assign('list', $list);
         $this->display();
     }
@@ -85,11 +86,11 @@ class RoleController extends BaseController
                         $this->success('编辑成功', U('admin/role/index'));
                     }else{
                         M()->rollback();
-                        $this->error('编辑失败1');
+                        $this->error('编辑失败');
                     }
                 } else {
                     M()->rollback();
-                    $this->error('编辑失败11');
+                    $this->error('编辑失败');
                 }
             }
         } else {

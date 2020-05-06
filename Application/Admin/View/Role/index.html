@@ -29,7 +29,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<foreach name="list" item="item1" key="key1">
+					<volist name="list" id="item1" key="key1" empty="$empty">
 					<tr class="text-c">
 						<td>{$item1['id']}</td>
 						<td>{$item1['role_name']}</td>
@@ -51,7 +51,7 @@
 								href="javascript:;"><i class="Hui-iconfont">&#xe6e2;</i></a>
 						</td>
 					</tr>
-					</foreach>
+					</volist>
 				</tbody>
 			</table>
 			</div>

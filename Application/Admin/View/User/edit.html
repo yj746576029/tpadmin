@@ -7,29 +7,29 @@
 			href="javascript:location.replace(location.href);" title="刷新"><i class="Hui-iconfont">&#xe68f;</i></a>
 	</nav>
 	<article class="cl pd-20">
-		<form action="{:U('admin/user/add')}" method="post" class="form form-horizontal" id="form-admin-add">
+		<form action="{:U('admin/user/edit')}" method="post" class="form form-horizontal" id="form-admin-add">
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>管理员：</label>
 				<div class="formControls col-xs-6 col-sm-7">
-					<input type="text" class="input-text" value="" placeholder="" name="account">
+					<input type="text" class="input-text" value="{$item['account']}" placeholder="" name="account">
 				</div>
 			</div>
 			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3">初始密码：</label>
+				<label class="form-label col-xs-4 col-sm-3">修改密码：</label>
 				<div class="formControls col-xs-6 col-sm-7">
-					<input type="password" class="input-text" autocomplete="off" value="" placeholder="不填默认为123456" name="password">
+					<input type="password" class="input-text" autocomplete="off" value="" placeholder="不填保持原密码" name="password">
 				</div>
 			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>手机：</label>
 				<div class="formControls col-xs-6 col-sm-7">
-					<input type="text" class="input-text" value="" placeholder="" name="mobile">
+					<input type="text" class="input-text" value="{$item['mobile']}" placeholder="" name="mobile">
 				</div>
 			</div>
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
 				<div class="formControls col-xs-6 col-sm-7">
-					<input type="text" class="input-text" placeholder="@" name="email">
+					<input type="text" class="input-text" value="{$item['email']}" placeholder="@" name="email">
 				</div>
 			</div>
 			<div id="roles" class="row cl">
@@ -40,7 +40,7 @@
 							<volist name="list" id="item1" key="key1">
 								<label style="padding-right: 10px">
 									<input type="checkbox" value="{$item1['id']}"
-										name="role_ids[]">{$item1['role_name']}
+										name="role_ids[]" {:in_array($item1['id'],$item['role'])?'checked':''}>{$item1['role_name']}
 								</label>
 							</volist>
 						</dd>
@@ -49,6 +49,7 @@
 			</div>
 			<div class="row cl">
 				<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+					<input type="hidden" name="id" value="{$item['id']}">
 					<input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
 				</div>
 			</div>

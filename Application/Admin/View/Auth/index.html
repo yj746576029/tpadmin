@@ -25,7 +25,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<foreach name="list" item="item1" key="key1">
+					<volist name="list" id="item1" key="key1" empty="$empty">
 						<tr class="text-c">
 							<td>{$item1['id']}</td>
 							<td style="text-align: left;">{$item1['auth_name']}</td>
@@ -48,7 +48,7 @@
 									href="javascript:;"><i class="Hui-iconfont">&#xe6e2;</i></a>
 							</td>
 						</tr>
-						<foreach name="item1.children" item="item2" key="key2">
+						<volist name="item1.children" id="item2" key="key2">
 							<tr class="text-c">
 								<td>{$item2['id']}</td>
 								<td style="text-align: left;">
@@ -74,7 +74,7 @@
 											class="Hui-iconfont">&#xe6e2;</i></a>
 								</td>
 							</tr>
-							<foreach name="item2.children" item="item3" key="key3">
+							<volist name="item2.children" id="item3" key="key3">
 								<tr class="text-c">
 									<td>{$item3['id']}</td>
 									<td style="text-align: left;">
@@ -101,9 +101,9 @@
 												class="Hui-iconfont">&#xe6e2;</i></a>
 									</td>
 								</tr>
-							</foreach>
-						</foreach>
-					</foreach>
+							</volist>
+						</volist>
+					</volist>
 				</tbody>
 			</table>
 		</article>

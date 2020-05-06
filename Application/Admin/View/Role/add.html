@@ -30,9 +30,9 @@
 				</div>
 			</div>
             <div class="row cl">
-                <label class="form-label col-xs-4 col-sm-3">网站角色：</label>
+                <label class="form-label col-xs-4 col-sm-3">权限：</label>
                 <div class="formControls col-xs-7 col-sm-8">
-                    <foreach name="list" item="item1" key="key1">
+                    <volist name="list" id="item1" key="key1">
                     <dl class="permission-list">
                         <dt>
                             <label>
@@ -40,7 +40,7 @@
                             </label>
                         </dt>
                         <dd>
-                            <foreach name="item1.children" item="item2" key="key2">
+                            <volist name="item1.children" id="item2" key="key2">
                             <dl class="cl permission-list2">
                                 <dt>
                                     <label class="">
@@ -48,17 +48,17 @@
                                     </label>
                                 </dt>
                                 <dd>
-                                    <foreach name="item2.children" item="item3" key="key3">
+                                    <volist name="item2.children" id="item3" key="key3">
                                     <label class="">
                                         <input type="checkbox" value="{$item3['id']}" name="auth_ids[]">{$item3['auth_name']}
                                     </label>
-                                    </foreach>
+                                    </volist>
                                 </dd>
                             </dl>
-                            </foreach>
+                            </volist>
                         </dd>
                     </dl>
-                    </foreach>
+                    </volist>
                 </div>
             </div>
             <div class="row cl">
