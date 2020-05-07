@@ -11,7 +11,7 @@
 			<div class="row cl">
 				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>上级：</label>
 				<div class="formControls col-xs-6 col-sm-7"> <span class="select-box" style="width:150px;">
-						<select class="select" name="parent_id" size="1">
+						<select class="select" name="parent_id" size="1" onchange="change(this)">
 							<option value="0" selected>---顶级---</option>
 							<foreach name="list" item="item1" key="key1">
 								<option value="{$item1['id']}">{$item1['auth_name']}</option>
@@ -30,7 +30,7 @@
 				</div>
 			</div>
 			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>规则：</label>
+				<label class="form-label col-xs-4 col-sm-3">规则：</label>
 				<div class="formControls col-xs-6 col-sm-7">
 					<input type="text" class="input-text"  value="" placeholder="规则" name="rule">
 				</div>
@@ -46,6 +46,13 @@
 						<input type="radio" value="0" name="status">
 						<label for="sex-2">关闭</label>
 					</div>
+				</div>
+			</div>
+			<div class="row cl act-icon">
+				<label class="form-label col-xs-4 col-sm-3">图标</label>
+				<div class="formControls col-xs-6 col-sm-7">
+					<input type="text" class="input-text"  value="" placeholder="图标" name="icon">
+					<span style="color: #666;">当上级选择顶级的时候填写有效</span>
 				</div>
 			</div>
 			<div class="row cl">
@@ -76,9 +83,6 @@
 				auth_name: {
 					required: true,
 				},
-				rule: {
-					required: true,
-				},
 				status: {
 					required: true,
 				},
@@ -91,4 +95,12 @@
 			}
 		});
 	});
+	function change(e){
+		var pid = $(e).val();
+		if(pid!=0){
+			$('.act-icon').addClass('hide');
+		}else{
+			$('.act-icon').removeClass('hide');
+		}
+	}
 </script>

@@ -24,6 +24,11 @@ class AuthController extends BaseController
             $data['parent_id'] = I('post.parent_id');
             $data['create_time'] = time();
             $data['update_time'] = $data['create_time'];
+            if($data['parent_id']==0){
+                $data['icon'] = I('post.icon');
+            }else{
+                $data['icon'] = '';
+            }
             $re = M('Auth')->add($data);
             if ($re) {
                 $this->success('新增成功', U('admin/auth/index'));
@@ -58,6 +63,11 @@ class AuthController extends BaseController
                 $data['status'] = I('post.status');
                 $data['parent_id'] = I('post.parent_id');
                 $data['update_time'] = time();
+                if($data['parent_id']==0){
+                    $data['icon'] = I('post.icon');
+                }else{
+                    $data['icon'] = '';
+                }
                 $re = M('Auth')->where(['id' => $id])->save($data);
                 if ($re) {
                     $this->success('编辑成功', U('admin/auth/index'));

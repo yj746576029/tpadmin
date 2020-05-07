@@ -8,7 +8,7 @@ class BaseController extends Controller {
         $this->display('/404');
     }
 
-    public function _before_index(){
+    public function _initialize(){
         $this->checkLogin();
         // $this->checkAuth();
     }
@@ -22,8 +22,9 @@ class BaseController extends Controller {
     {
         // code 1 成功,0失败,-1未登录或登录过期
         if (!session('?user')) {
-            $this->redirect('admin/login/index');
+            $this->redirect('admin/login/index');die;
         }
+        $this->assign('menu',create_menu());
     }
 
     /**
