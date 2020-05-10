@@ -10,7 +10,6 @@ class AuthController extends BaseController
     {
         $authList = M('Auth')->field('id,auth_name,status,rule,parent_id,create_time,update_time')->select();
         $list = list_to_tree($authList);
-        $this->assign('empty','<tr class="text-c"><td colspan="5">数据为空</td></tr>');
         $this->assign('list', $list);
         $this->display();
     }

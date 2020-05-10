@@ -2,6 +2,7 @@
 if (!function_exists('create_menu')) {
     function create_menu()
     {
+        /**按理菜单需要做缓存处理，这里先不做缓存 */
         $user = session('user');
         $user = D('User')->relation(true)->where(['id' => $user['id']])->find();
         if ($user['is_super'] != 1) {
