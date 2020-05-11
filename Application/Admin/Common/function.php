@@ -2,41 +2,7 @@
 if (!function_exists('create_menu')) {
     function create_menu()
     {
-        /**按理菜单需要做缓存处理，这里先不做缓存 */
-        $user = session('user');
-        $user = D('User')->relation(true)->where(['id' => $user['id']])->find();
-        if ($user['is_super'] != 1) {
-            $roleIds = [];
-            foreach ($user['role'] as $v) {
-                if ($v['status'] == 1) {
-                    array_push($roleIds, $v['id']);
-                }
-            }
-            $roleIdsStr = implode(',', $roleIds);
-            $roleArr = D('Role')->relation(true)->where(['id' => ['in', $roleIdsStr]])->select();
-            $authArr = [];
-            foreach ($roleArr as $v) {
-                foreach ($v['auth'] as $vv) {
-                    $d = $vv;
-                    unset($d['create_time'], $d['update_time']);
-                    if ($vv['status'] == 1) {
-                        array_push($authArr, $d);
-                    }
-                }
-            }
-            $tree = list_to_tree(array_unique($authArr, SORT_REGULAR));
-        } else {
-            $authList = M('Auth')->select();
-            $authArr = [];
-            foreach ($authList as $vv) {
-                $d = $vv;
-                unset($d['create_time'], $d['update_time']);
-                if ($vv['status'] == 1) {
-                    array_push($authArr, $d);
-                }
-            }
-            $tree = list_to_tree(array_unique($authArr, SORT_REGULAR));
-        }
+        $tree = list_to_tree(auth_list());
         $controller = strtolower(CONTROLLER_NAME);
         $menuHtml = '<aside class="Hui-aside"><div class="menu_dropdown bk_2">';
         foreach ($tree as $v) {
@@ -64,5 +30,46 @@ if (!function_exists('create_menu')) {
         }
         $menuHtml .= '</div></aside>';
         return $menuHtml;
+    }
+}
+
+if (!function_exists('auth_list')) {
+    function auth_list()
+    {
+        $user = session('user');
+        $user = D('User')->relation(true)->where(['id' => $user['id']])->find();
+        if ($user['is_super'] != 1) {
+            $roleIds = [];
+            foreach ($user['role'] as $v) {
+                if ($v['status'] == 1) {
+                    array_push($roleIds, $v['id']);
+                }
+            }
+            $roleIdsStr = implode(',', $roleIds);
+            $roleArr = D('Role')->relation(true)->where(['id' => ['in', $roleIdsStr]])->select();
+            $authArr = [];
+            foreach ($roleArr as $v) {
+                foreach ($v['auth'] as $vv) {
+                    $d = $vv;
+                    unset($d['create_time'], $d['update_time']);
+                    if ($vv['status'] == 1) {
+                        array_push($authArr, $d);
+                    }
+                }
+            }
+            $list = array_unique($authArr, SORT_REGULAR);
+        } else {
+            $authList = M('Auth')->select();
+            $authArr = [];
+            foreach ($authList as $vv) {
+                $d = $vv;
+                unset($d['create_time'], $d['update_time']);
+                if ($vv['status'] == 1) {
+                    array_push($authArr, $d);
+                }
+            }
+            $list = array_unique($authArr, SORT_REGULAR);
+        }
+        return $list;
     }
 }

@@ -8,7 +8,7 @@ class AuthController extends BaseController
 {
     public function index()
     {
-        $authList = M('Auth')->field('id,auth_name,status,rule,parent_id,create_time,update_time')->select();
+        $authList = M('Auth')->field('id,auth_name,status,rule,parent_id,sort,create_time,update_time')->select();
         $list = list_to_tree($authList);
         $this->assign('list', $list);
         $this->display();
@@ -21,11 +21,12 @@ class AuthController extends BaseController
             $data['rule'] = I('post.rule');
             $data['status'] = I('post.status');
             $data['parent_id'] = I('post.parent_id');
+            $data['sort'] = I('post.sort');
             $data['create_time'] = time();
             $data['update_time'] = $data['create_time'];
-            if($data['parent_id']==0){
+            if ($data['parent_id'] == 0) {
                 $data['icon'] = I('post.icon');
-            }else{
+            } else {
                 $data['icon'] = '';
             }
             $re = M('Auth')->add($data);
@@ -45,26 +46,27 @@ class AuthController extends BaseController
     public function edit()
     {
         if (IS_POST) {
-            if(IS_AJAX){
+            if (IS_AJAX) {
                 $id = I('post.id');
                 $data['status'] = I('post.status');
                 $data['update_time'] = time();
                 $re = M('Auth')->where(['id' => $id])->save($data);
                 if ($re) {
-                    $this->ajaxReturn(['code'=>1,'msg'=>'成功']);
+                    $this->ajaxReturn(['code' => 1, 'msg' => '成功']);
                 } else {
-                    $this->ajaxReturn(['code'=>0,'msg'=>'失败']);
+                    $this->ajaxReturn(['code' => 0, 'msg' => '失败']);
                 }
-            }else{
+            } else {
                 $id = I('post.id');
                 $data['auth_name'] = I('post.auth_name');
                 $data['rule'] = I('post.rule');
                 $data['status'] = I('post.status');
                 $data['parent_id'] = I('post.parent_id');
+                $data['sort'] = I('post.sort');
                 $data['update_time'] = time();
-                if($data['parent_id']==0){
+                if ($data['parent_id'] == 0) {
                     $data['icon'] = I('post.icon');
-                }else{
+                } else {
                     $data['icon'] = '';
                 }
                 $re = M('Auth')->where(['id' => $id])->save($data);

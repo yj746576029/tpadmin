@@ -1,16 +1,22 @@
 <?php
-namespace Admin\Controller;
-use Think\Controller;
-class BaseController extends Controller {
 
-    public function _empty($name){
+namespace Admin\Controller;
+
+use Think\Controller;
+
+class BaseController extends Controller
+{
+
+    public function _empty($name)
+    {
         //空操作
         $this->display('/404');
     }
 
-    public function _initialize(){
+    public function _initialize()
+    {
         $this->checkLogin();
-        // $this->checkAuth();
+        $this->checkAuth();
     }
 
     /**
@@ -22,9 +28,10 @@ class BaseController extends Controller {
     {
         // code 1 成功,0失败,-1未登录或登录过期
         if (!session('?user')) {
-            $this->redirect('admin/login/index');die;
+            $this->redirect('admin/login/index');
+            die;
         }
-        $this->assign('menu',create_menu());
+        $this->assign('menu', create_menu());
     }
 
     /**
@@ -32,70 +39,30 @@ class BaseController extends Controller {
      *
      * @return void
      */
-    public function checkAuthAction()
+    public function checkAuth()
     {
         // $module = MODULE_NAME;
-        $controller = CONTROLLER_NAME;
-        $controllerArr = explode('/', $controller);
-        $action = ACTION_NAME;
-        //获取用户的权限集合
-        $user = session('user');
-        // $user = M('User')->where('id='.$user['id'])->find();
-        // if ($user['is_super'] != 1) {
-        //     $authArr = $this->getAuthList($user['id']);
-        //     $permArr = [
-        //         'm' => false, //模块是否有权限（这里的模块是指控制器所在文件夹名，比如控制器user.php所在文件夹名为permission）
-        //         'c' => false, //控制器是否有权限
-        //         'a' => false, //方法是否有权限
-        //     ];
-        //     foreach ($authArr as $v) {
-        //         if ($v['rule'] === $controllerArr[0]) {
-        //             $permArr['m'] = true;
-        //         }
-        //         if ($v['rule'] === $controllerArr[0] . ',' . $controllerArr[1]) {
-        //             $permArr['c'] = true;
-        //         }
-        //         if ($v['rule'] === $controllerArr[0] . ',' . $controllerArr[1] . ',' . $action) {
-        //             $permArr['a'] = true;
-        //         }
-        //     }
-
-        //     if (!($permArr['m'] && $permArr['c'] && $permArr['a'])) {
-        //         $this->ajaxReturn(array('code' => '0', 'msg' => '您没有权限'));
-        //     }
-        // }
+        $controller = strtolower(CONTROLLER_NAME);
+        $action = strtolower(ACTION_NAME);
+        $authArr = auth_list();
+        
+        $permArr = [
+            'c' => false, //控制器是否有权限
+            'a' => false, //方法是否有权限
+        ];
+        foreach ($authArr as $v) {
+            if ($v['rule'] === $controller) {
+                $permArr['c'] = true;
+            }
+            if ($v['rule'] === $controller . '/' . $action) {
+                $permArr['a'] = true;
+            }
+        }
+        if (!($permArr['c'] || $permArr['a'])) {
+            $noCheckArr=['index/index'];//忽略校验的控制器/方法
+            if(!in_array($controller . '/' . $action,$noCheckArr)){
+                $this->error('您没有权限');die;
+            }
+        }
     }
-
-    /**
-     * 获取用户的权限集合
-     *
-     * @param int $userId
-     * @return array
-     */
-    private function getAuthListAction($userId)
-    {
-        // $user = UserModel::get(['id' => $userId]);
-        // $roleIds = [];
-        // $arr = collection($user->role)->toArray();
-        // foreach ($arr as $v) {
-        //     if ($v['status'] == 1) {
-        //         array_push($roleIds, $v['id']);
-        //     }
-        // }
-        // $roleIdsStr = implode(',', $roleIds);
-        // $role = RoleModel::all(['id' => ['in', $roleIdsStr], 'status' => 1], 'auth');
-        // $roleArr = collection($role)->toArray();
-        // $authArr = [];
-        // foreach ($roleArr as $v) {
-        //     foreach ($v['auth'] as $vv) {
-        //         $d = $vv;
-        //         unset($d['create_time'], $d['update_time']);
-        //         if ($vv['status'] == 1) {
-        //             array_push($authArr, $d);
-        //         }
-        //     }
-        // }
-        // return $authArr;
-    }
-
 }

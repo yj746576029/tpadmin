@@ -58,7 +58,35 @@ if (!function_exists('list_to_tree')) {
                 }
             }
         }
-
+        //进行排序
+        $tree = array_sort($tree);
+        foreach($tree as $k => $v){
+            $tree[$k]['children']=array_sort($v['children']);
+        }
+        foreach($tree as $k => $v){
+            foreach($v['children'] as $kk => $vv){
+                $tree[$k]['children'][$kk]['children']=array_sort($vv['children']);
+            }
+        }
         return $tree;
+    }
+}
+if (!function_exists('array_sort')) {
+    /**
+     * 二维数组排序
+     *
+     * @param array $array
+     * @param string $key1
+     * @param string $key2
+     * @return void
+     */
+    function array_sort($array, $key1='sort', $key2 = 'id')
+    {
+        foreach ($array as $k => $v) {
+            $sort[$k]  = $v[$key1];
+            $id[$k] = $v[$key2];
+        }
+        array_multisort($sort, SORT_DESC, $id, SORT_ASC, $array); //$sort第一排序降序，$id第二排序升序
+        return $array;
     }
 }
