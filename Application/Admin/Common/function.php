@@ -47,6 +47,9 @@ if (!function_exists('create_menu')) {
             if (in_array($controller, $chirldrenCtrls)) {
                 $class1 = 'selected';
                 $style1 = 'display: block;';
+            }else{
+                $class1 = '';
+                $style1 = 'display: none;';
             }
             $menuHtml .= '<dl><dt class="' . $class1 . '"><i class="Hui-iconfont '.$v['icon'].'"></i> ' . $v['auth_name'] . '<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt><dd style="' . $style1 . '"><ul>';
             foreach ($v['children'] as $vv) {
