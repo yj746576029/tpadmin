@@ -26,7 +26,6 @@ class BaseController extends Controller
      */
     private function checkLogin()
     {
-        // code 1 成功,0失败,-1未登录或登录过期
         if (!session('?user')) {
             $this->redirect('admin/login/index');
             die;
