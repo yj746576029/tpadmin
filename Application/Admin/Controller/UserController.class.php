@@ -20,7 +20,7 @@ class UserController extends BaseController
             $this->assign('end_time', I('get.end_time'));
         }
         if(!empty(I('get.keywords'))){
-            $condition['account']=array('like','%'.I('get.keywords').'%');
+            $condition['username']=array('like','%'.I('get.keywords').'%');
             $this->assign('keywords', I('get.keywords'));
         }
         $list = D('User')->relation(true)->where($condition)->select();
@@ -32,7 +32,7 @@ class UserController extends BaseController
     public function add()
     {
         if (IS_POST) {
-            $data['account'] = I('post.account');
+            $data['username'] = I('post.username');
             $data['salt'] = substr(md5(uniqid(true)), 0, 4);
             if(!empty(I('post.password'))){
                 $data['password'] = md5(md5(I('post.password')) . $data['salt']);
@@ -78,7 +78,7 @@ class UserController extends BaseController
         if (IS_POST) {
             M()->startTrans();
             $id = I('post.id');
-            $data['account'] = I('post.account');
+            $data['username'] = I('post.username');
             if(!empty(I('post.password'))){
                 $data['salt'] = substr(md5(uniqid(true)), 0, 4);
                 $data['password'] = md5(md5(I('post.password')) . $data['salt']);
@@ -120,39 +120,6 @@ class UserController extends BaseController
             $list = list_to_tree($roleList);
             $this->assign('list', $list);
             $this->assign('item', $user);
-            $this->display();
-        }
-    }
-
-    public function account()
-    {
-        $user = session('user');
-        $this->assign('user', $user);
-        $this->display();
-    }
-
-    public function accountEdit()
-    {
-        if (IS_POST) {
-            $account = I('post.account');
-            $password = I('post.password');
-            $password2 = I('post.password2');
-            $user = M('User')->where(['account' => $account])->find();
-            if ($user['password'] === md5(md5($password) . $user['salt'])) {
-                $data['password'] = md5(md5($password2) . $user['salt']);
-                $re = M('User')->where(['account' => $user['account']])->save($data);
-                if ($re) {
-                    session('user', null);
-                    $this->success('修改成功，请重新登录', U('admin/login/index'));
-                } else {
-                    $this->error('修改失败');
-                }
-            } else {
-                $this->error('原始密码错误');
-            }
-        } else {
-            $user = session('user');
-            $this->assign('user', $user);
             $this->display();
         }
     }
