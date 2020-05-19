@@ -42,8 +42,8 @@ INSERT INTO `tp_auth` VALUES (2, '管理员管理', 'user', 1, 1, NULL, NULL, NU
 INSERT INTO `tp_auth` VALUES (3, '列表', 'user/index', 2, 1, NULL, 1589199629, '', 0);
 INSERT INTO `tp_auth` VALUES (4, '新增', 'user/add', 2, 1, NULL, NULL, NULL, 0);
 INSERT INTO `tp_auth` VALUES (5, '编辑', 'user/edit', 2, 1, NULL, NULL, NULL, 0);
-INSERT INTO `tp_auth` VALUES (6, '删除', 'user/del', 2, 1, NULL, NULL, NULL, 2);
-INSERT INTO `tp_auth` VALUES (7, '角色管理', 'role', 1, 1, NULL, NULL, NULL, 2);
+INSERT INTO `tp_auth` VALUES (6, '删除', 'user/del', 2, 1, NULL, NULL, NULL, 0);
+INSERT INTO `tp_auth` VALUES (7, '角色管理', 'role', 1, 1, NULL, NULL, NULL, 0);
 INSERT INTO `tp_auth` VALUES (8, '列表', 'user/index', 7, 1, NULL, NULL, NULL, 0);
 INSERT INTO `tp_auth` VALUES (9, '新增', 'user/add', 7, 1, NULL, NULL, NULL, 0);
 INSERT INTO `tp_auth` VALUES (10, '编辑', 'user/edit', 7, 1, NULL, NULL, NULL, 0);
@@ -53,7 +53,7 @@ INSERT INTO `tp_auth` VALUES (13, '列表', 'auth/index', 12, 1, NULL, NULL, NUL
 INSERT INTO `tp_auth` VALUES (14, '新增', 'auth/add', 12, 1, NULL, NULL, NULL, 0);
 INSERT INTO `tp_auth` VALUES (15, '编辑', 'auth/edit', 12, 1, NULL, NULL, NULL, 0);
 INSERT INTO `tp_auth` VALUES (16, '删除', 'auth/del', 12, 1, NULL, NULL, NULL, 0);
-INSERT INTO `tp_auth` VALUES (17, '常规管理', '', 0, 1, 1589116523, 1589116523, 'Hui-iconfont-system', 1);
+INSERT INTO `tp_auth` VALUES (17, '常规管理', '', 0, 1, 1589116523, 1589116523, 'Hui-iconfont-system', 0);
 INSERT INTO `tp_auth` VALUES (18, '个人设置', 'profile', 17, 1, 1589117016, 1589117016, '', 0);
 INSERT INTO `tp_auth` VALUES (19, '查看', 'profile/index', 18, 1, 1589117711, 1589117711, '', 0);
 INSERT INTO `tp_auth` VALUES (20, '修改密码', 'profile/edit', 18, 1, 1589117736, 1589117736, '', 0);
@@ -139,8 +139,6 @@ CREATE TABLE `tp_user`  (
 -- Records of yj_user
 -- ----------------------------
 INSERT INTO `tp_user` VALUES (1, 'admin', '296c344e352a95df55bc2b19c9427047', '3488', 'admin', NULL, NULL, 1587881100, 1587881100, 1);
-INSERT INTO `tp_user` VALUES (2, '张三', 'f8cdf85d03d61f02aff7a20fffb4c442', 'b65a', NULL, '13900000000', 'zhangsan@163.com', 1588766797, 1588768575, 0);
-INSERT INTO `tp_user` VALUES (3, '李四', '8250657868463ffab5262481d3fdae8e', '0b21', NULL, '13900000001', 'lisi@163.com', 1588768045, 1588768045, 0);
 
 -- ----------------------------
 -- Table structure for yj_user_role
