@@ -39,6 +39,42 @@ export function list(data) {
   return request({
     url: '/user/index',
     method: 'get',
-    params:data
+    params: data
+  })
+}
+
+// 用户新增
+export function add(data) {
+  return request({
+    url: '/user/add',
+    method: 'post',
+    data
+  })
+}
+
+// 用户详情
+export function detail(id) {
+  return request({
+    url: '/user/edit',
+    method: 'get',
+    params: { id }
+  })
+}
+
+// 用户新增
+export function edit(data) {
+  return request({
+    url: '/user/edit',
+    method: 'post',
+    data
+  })
+}
+
+// 用户删除
+export function del(data) {
+  return request({
+    url: '/user/del',
+    method: 'post',
+    data
   })
 }

@@ -131,7 +131,7 @@ function stop(obj, id) {
 	}
 	/*删除*/
 	function del(id) {
-		layer.confirm('权限删除须谨慎，确认要删除吗？', function (index) {
+		layer.confirm('用户删除须谨慎，确认要删除吗？', function (index) {
 			location.href = "{:U('admin/user/del/id/" + id + "')}";
 		});
 	}

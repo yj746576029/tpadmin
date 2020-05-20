@@ -8,19 +8,19 @@ class UserController extends BaseController
 {
     public function index()
     {
-        $condition['is_super']=0;
-        if(!empty(I('get.start_time'))){
-            $s=strtotime(I('get.start_time'));
-            $condition['create_time']=array('egt',$s);
+        $condition['is_super'] = 0;
+        if (!empty(I('get.start_time'))) {
+            $s = strtotime(I('get.start_time'));
+            $condition['create_time'] = array('egt', $s);
             $this->assign('start_time', I('get.start_time'));
         }
-        if(!empty(I('get.end_time'))){
-            $e=strtotime(I('get.end_time'));
-            $condition['end_time']=array('elt',$e);
+        if (!empty(I('get.end_time'))) {
+            $e = strtotime(I('get.end_time'));
+            $condition['end_time'] = array('elt', $e);
             $this->assign('end_time', I('get.end_time'));
         }
-        if(!empty(I('get.keywords'))){
-            $condition['username']=array('like','%'.I('get.keywords').'%');
+        if (!empty(I('get.keywords'))) {
+            $condition['username'] = array('like', '%' . I('get.keywords') . '%');
             $this->assign('keywords', I('get.keywords'));
         }
         $list = D('User')->relation(true)->where($condition)->select();
@@ -34,9 +34,9 @@ class UserController extends BaseController
         if (IS_POST) {
             $data['username'] = I('post.username');
             $data['salt'] = substr(md5(uniqid(true)), 0, 4);
-            if(!empty(I('post.password'))){
+            if (!empty(I('post.password'))) {
                 $data['password'] = md5(md5(I('post.password')) . $data['salt']);
-            }else{
+            } else {
                 $data['password'] = md5(md5('123456') . $data['salt']);
             }
             $data['mobile'] = I('post.mobile');
@@ -66,9 +66,8 @@ class UserController extends BaseController
                 $this->error('新增失败');
             }
         } else {
-            $roleList = M('Role')->field('id,role_name,status')->select();
-            $list = list_to_tree($roleList);
-            $this->assign('list', $list);
+            $roleList = M('Role')->field('id,role_name')->where(['status' => 1])->select();
+            $this->assign('list', $roleList);
             $this->display();
         }
     }
@@ -79,7 +78,7 @@ class UserController extends BaseController
             M()->startTrans();
             $id = I('post.id');
             $data['username'] = I('post.username');
-            if(!empty(I('post.password'))){
+            if (!empty(I('post.password'))) {
                 $data['salt'] = substr(md5(uniqid(true)), 0, 4);
                 $data['password'] = md5(md5(I('post.password')) . $data['salt']);
             }
@@ -116,11 +115,25 @@ class UserController extends BaseController
                 array_push($role_ids, $v['id']);
             }
             $user['role'] = $role_ids;
-            $roleList = M('Role')->field('id,role_name,status')->select();
-            $list = list_to_tree($roleList);
-            $this->assign('list', $list);
+            $roleList = M('Role')->field('id,role_name')->where(['status' => 1])->select();
+            $this->assign('list', $roleList);
             $this->assign('item', $user);
             $this->display();
+        }
+    }
+
+    public function del()
+    {
+        $id = I('get.id');
+        M()->startTrans();
+        $res = M('User')->where(['id' => $id])->delete();
+        if ($res) {
+            D('UserRole')->where(['user_id' => $id])->delete();
+            M()->commit();
+            $this->success('删除成功', U('admin/user/index'));
+        } else {
+            M()->rollback();
+            $this->error('删除失败');
         }
     }
 }

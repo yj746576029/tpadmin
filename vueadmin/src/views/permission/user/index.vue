@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-form :model="ruleForm">
-        <el-input v-model="ruleForm.keywords" placeholder="请输入用户名" style="width: 200px;" />
+      <el-form :model="ruleForm1" ref="ruleForm1">
+        <el-input v-model="ruleForm1.keywords" placeholder="请输入用户名" style="width: 200px;" />
         <el-date-picker
-          v-model="ruleForm.date"
+          v-model="ruleForm1.date"
           type="daterange"
           align="right"
           unlink-panels
@@ -15,7 +15,7 @@
           :picker-options="pickerOptions"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="handleFilter" :loading="loading">搜索</el-button>
-        <el-button type="primary" icon="el-icon-plus" @click="handleAdd">添加</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="handleAdd()">添加</el-button>
       </el-form>
     </div>
     <el-table :data="tableData" border style="width: 100%" v-loading="loading">
@@ -50,7 +50,14 @@
       <el-table-column label="操作" width="180">
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          <el-popconfirm
+            title="删除须谨慎，确认要删除吗？"
+            icon="el-icon-info"
+            iconColor="red"
+            @onConfirm="handleDelete(scope.$index, scope.row)"
+          >
+            <el-button size="mini" type="danger" slot="reference">删除</el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -63,41 +70,38 @@
       @current-change="currentChange"
     ></el-pagination>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="用户名" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+      <el-form :model="ruleForm2" :rules="rules" ref="ruleForm2">
+        <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
+          <el-input v-model="ruleForm2.username" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="手机号" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+        <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
+          <el-input v-model="ruleForm2.mobile" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+        <el-form-item label="邮箱" :label-width="formLabelWidth" prop="email">
+          <el-input v-model="ruleForm2.email" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="角色" :label-width="formLabelWidth">
-          <el-checkbox-group v-model="form.roleList">
-            <el-checkbox label="复选框 A"></el-checkbox>
-            <el-checkbox label="复选框 B"></el-checkbox>
-            <el-checkbox label="复选框 C"></el-checkbox>
-            <el-checkbox label="禁用" disabled></el-checkbox>
-            <el-checkbox label="选中且禁用" disabled></el-checkbox>
+        <el-form-item label="角色" :label-width="formLabelWidth" prop="roleids">
+          <el-checkbox-group v-model="ruleForm2.roleids">
+            <el-checkbox v-for="(item, i) in roleList" :label="item.id" :key="i">{{item.role_name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="新密码" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+        <el-form-item label="新密码" :label-width="formLabelWidth" prop="newpassword">
+          <el-input v-model="ruleForm2.newpassword" autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm2')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { list } from "@/api/user";
+import { list, add, detail, edit, del } from "@/api/user";
 
 export default {
+  name: "User",
   data() {
     return {
       loading: false,
@@ -136,21 +140,29 @@ export default {
       total: 1000,
       page: 0,
       pageSize: 10,
-      ruleForm: {
+      ruleForm1: {
         date: ["", ""],
         keywords: ""
       },
       dialogFormVisible: false,
+      dialogType: "",
       dialogTitle: "",
-      form: {
+      ruleForm2: {
         username: "",
         mobile: "",
         email: "",
         roleids: [],
-        newpassword: '',
+        newpassword: ""
       },
-      roleList: ['选中且禁用','复选框 A'],
-      formLabelWidth: "120px"
+      editId: 0,
+      roleList: [],
+      formLabelWidth: "120px",
+      rules: {
+        username: [{ required: true, message: "用户名不能为空" }],
+        mobile: [{ required: true, message: "手机不能为空" }],
+        email: [{ required: true, message: "邮箱不能为空" }],
+        roleids: [{ required: true, message: "角色不能为空" }]
+      }
     };
   },
   created() {
@@ -158,17 +170,32 @@ export default {
   },
   methods: {
     handleAdd() {
+      this.dialogType = "add";
       this.dialogTitle = "用户添加";
       this.dialogFormVisible = true;
-      console.log(index, row);
+      this.$refs["ruleForm2"] ? this.$refs["ruleForm2"].resetFields() : null;
     },
     handleEdit(index, row) {
+      this.editId = row.id;
+      this.dialogType = "edit";
       this.dialogTitle = "用户编辑";
       this.dialogFormVisible = true;
-      console.log(index, row);
+      detail(this.editId).then(res => {
+        let detail = res.data.detail;
+        this.ruleForm2.username = detail.username;
+        this.ruleForm2.mobile = detail.mobile;
+        this.ruleForm2.email = detail.email;
+        this.ruleForm2.roleids = detail.role;
+      });
     },
     handleDelete(index, row) {
-      console.log(index, row);
+      del({ id: row.id }).then(res => {
+        this.$message({
+          message: "删除成功",
+          type: "success",
+          duration: 5 * 1000
+        });
+      });
     },
     handleFilter() {
       this.page = 0;
@@ -178,17 +205,16 @@ export default {
       this.loading = true;
       let params = {
         page: this.page,
-        keywords: this.ruleForm.keywords,
-        start_time: this.ruleForm.date[0],
-        end_time: this.ruleForm.date[1]
+        keywords: this.ruleForm1.keywords,
+        start_time: this.ruleForm1.date[0],
+        end_time: this.ruleForm1.date[1]
       };
-      console.log(params);
       list(params)
         .then(res => {
-          console.log(res);
           this.tableData = res.data.list;
           this.total = res.data.total;
           this.pageSize = res.data.page_size;
+          this.roleList = res.data.role_list;
           this.loading = false;
         })
         .catch(() => {
@@ -196,9 +222,43 @@ export default {
         });
     },
     currentChange(e) {
-      console.log(e);
       this.page = e;
       this.getList();
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let dialogType = this.dialogType;
+          if (dialogType == "add") {
+            let params = this.ruleForm2;
+            add(params).then(res => {
+              this.$message({
+                message: "添加成功",
+                type: "success",
+                duration: 5 * 1000
+              });
+              this.dialogFormVisible = false;
+              this.getList();
+            });
+          }
+          if (dialogType == "edit") {
+            let params = this.ruleForm2;
+            params.id = this.editId;
+            edit(params).then(res => {
+              this.$message({
+                message: "编辑成功",
+                type: "success",
+                duration: 5 * 1000
+              });
+              this.dialogFormVisible = false;
+              this.getList();
+            });
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     }
   }
 };

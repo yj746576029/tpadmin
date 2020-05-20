@@ -28,7 +28,8 @@ class UserController extends BaseController
             $v['create_time'] = date('Y-m-d H:i:s', $v['create_time']);
         }
         unset($v);
-        json(1, ['list' => $list, 'total' => $total * 1, 'page' => $page, 'page_size' => $pageSize]);
+        $roleList = M('Role')->field('id,role_name')->where(['status' => 1])->select();
+        json(1, ['list' => $list, 'total' => $total * 1, 'page' => $page, 'page_size' => $pageSize, 'role_list' => $roleList]);
     }
 
     public function add()
@@ -49,7 +50,7 @@ class UserController extends BaseController
             M()->startTrans();
             $re = D('User')->add($data);
             if ($re) {
-                $role_ids = I('post.role_ids');
+                $role_ids = I('post.roleids');
                 $dataList = [];
                 foreach ($role_ids as $v) {
                     $item = array('user_id' => $re, 'role_id' => $v);
@@ -58,20 +59,15 @@ class UserController extends BaseController
                 $res = D('UserRole')->addAll($dataList);
                 if ($res) {
                     M()->commit();
-                    $this->success('新增成功', U('admin/user/index'));
+                    json(1);
                 } else {
                     M()->rollback();
-                    $this->error('新增失败');
+                    json(0, '新增失败');
                 }
             } else {
                 M()->rollback();
-                $this->error('新增失败');
+                json(0, '新增失败');
             }
-        } else {
-            $roleList = M('Role')->field('id,role_name,status')->select();
-            $list = list_to_tree($roleList);
-            $this->assign('list', $list);
-            $this->display();
         }
     }
 
@@ -92,7 +88,7 @@ class UserController extends BaseController
             $re = M('User')->where(['id' => $id])->save($data);
             if ($re) {
                 D('UserRole')->where(['user_id' => $id])->delete();
-                $role_ids = I('post.role_ids');
+                $role_ids = I('post.roleids');
                 $dataList = [];
                 foreach ($role_ids as $v) {
                     $item = array('user_id' => $id, 'role_id' => $v);
@@ -101,14 +97,14 @@ class UserController extends BaseController
                 $res = D('UserRole')->addAll($dataList);
                 if ($res) {
                     M()->commit();
-                    $this->success('编辑成功', U('admin/user/index'));
+                    json(1, '编辑成功');
                 } else {
                     M()->rollback();
-                    $this->error('编辑失败');
+                    json(0, '编辑失败');
                 }
             } else {
                 M()->rollback();
-                $this->error('编辑失败');
+                json(0, '编辑失败');
             }
         } else {
             $id = I('get.id');
@@ -118,8 +114,24 @@ class UserController extends BaseController
                 array_push($role_ids, $v['id']);
             }
             $user['role'] = $role_ids;
-            $roleList = M('Role')->field('id,role_name,status')->select();
-            json(1, ['detail'=>$user,'role_list' => $roleList]);
+            json(1, ['detail' => $user]);
+        }
+    }
+
+    public function del()
+    {
+        if (IS_POST) {
+            $id = I('post.id');
+            M()->startTrans();
+            $res = M('User')->where(['id' => $id])->delete();
+            if ($res) {
+                D('UserRole')->where(['user_id' => $id])->delete();
+                M()->commit();
+                json(1);
+            } else {
+                M()->rollback();
+                json(0,'删除失败');
+            }
         }
     }
 }

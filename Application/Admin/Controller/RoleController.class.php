@@ -117,7 +117,7 @@ class RoleController extends BaseController
         if ($res) {
             D('RoleAuth')->where(['role_id'=>$id])->delete();
             M()->commit();
-            $this->success('删除成功', U('admin/Role/index'));
+            $this->success('删除成功', U('admin/role/index'));
         } else {
             M()->rollback();
             $this->error('删除失败');
