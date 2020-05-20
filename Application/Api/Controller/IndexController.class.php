@@ -1,8 +1,23 @@
 <?php
 namespace Api\Controller;
-use Think\Controller;
-class IndexController extends Controller {
+use Api\Controller\BaseController;
+
+class IndexController extends BaseController {
     public function index(){
-        $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px } a,a:hover{color:blue;}</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>版本 V{$Think.version}</div><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_55e75dfae343f5a1"></thinkad><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
+        $mysql= M()->query("select version() as v");
+        // 系统信息
+        $sys['host']               = $_SERVER['HTTP_HOST'];//服务器地址
+        $sys['os']                 = PHP_OS;//操作系统
+        $sys['software']           = $_SERVER['SERVER_SOFTWARE'];//运行环境
+        $sys['php_version']        = PHP_VERSION;//PHP版本
+        $sys['php_sapi_name']      = php_sapi_name();//PHP运行方式
+        $sys['mysql_version']      = $mysql[0]['v'];//MYSQL版本
+        $sys['upload_max']         = ini_get('upload_max_filesize');//上传附件限制
+        $sys['max_execution_time'] = ini_get("max_execution_time")."秒";//执行时间限制
+        $sys['free_space']         = round(disk_free_space("/")/(1024*1024),2).'M';
+        // 版权信息
+        $sys['product_name']   = 'yjadmin管理系统';
+        $sys['author']         = '杨杰';
+        json(1,$sys);
     }
 }
