@@ -11,10 +11,10 @@ class LoginController extends Controller
         // $salt = substr(md5(uniqid(true)), 0, 4);
         // $newPassword = md5(md5('123456') . $salt);
         if (IS_POST) {
-            $username = I('post.username');
+            $userName = I('post.user_name');
             $password = I('post.password');
             $verify = I('post.verify');
-            $user = M('User')->where(['username' => $username])->find();
+            $user = M('User')->where(['user_name' => $userName])->find();
             if (!$user) {
                 $this->error('用户不存在');
             } else {

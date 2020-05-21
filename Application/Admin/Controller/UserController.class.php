@@ -20,7 +20,7 @@ class UserController extends BaseController
             $this->assign('end_time', I('get.end_time'));
         }
         if (!empty(I('get.keywords'))) {
-            $condition['username'] = array('like', '%' . I('get.keywords') . '%');
+            $condition['user_name'] = array('like', '%' . I('get.keywords') . '%');
             $this->assign('keywords', I('get.keywords'));
         }
         $list = D('User')->relation(true)->where($condition)->select();
@@ -32,7 +32,7 @@ class UserController extends BaseController
     public function add()
     {
         if (IS_POST) {
-            $data['username'] = I('post.username');
+            $data['user_name'] = I('post.user_name');
             $data['salt'] = substr(md5(uniqid(true)), 0, 4);
             if (!empty(I('post.password'))) {
                 $data['password'] = md5(md5(I('post.password')) . $data['salt']);
@@ -77,7 +77,7 @@ class UserController extends BaseController
         if (IS_POST) {
             M()->startTrans();
             $id = I('post.id');
-            $data['username'] = I('post.username');
+            $data['user_name'] = I('post.user_name');
             if (!empty(I('post.password'))) {
                 $data['salt'] = substr(md5(uniqid(true)), 0, 4);
                 $data['password'] = md5(md5(I('post.password')) . $data['salt']);

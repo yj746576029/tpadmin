@@ -16,13 +16,13 @@ class ProfileController extends BaseController
     public function edit()
     {
         if (IS_POST) {
-            $username = I('post.username');
+            $userName = I('post.user_name');
             $password = I('post.password');
             $password2 = I('post.password2');
-            $user = M('User')->where(['username' => $username])->find();
+            $user = M('User')->where(['user_name' => $userName])->find();
             if ($user['password'] === md5(md5($password) . $user['salt'])) {
                 $data['password'] = md5(md5($password2) . $user['salt']);
-                $re = M('User')->where(['username' => $user['username']])->save($data);
+                $re = M('User')->where(['user_name' => $user['user_name']])->save($data);
                 if ($re) {
                     session('user', null);
                     $this->success('修改成功，请重新登录', U('admin/login/index'));
