@@ -22,10 +22,10 @@
       <el-table-column label="姓名" width="180">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>姓名: {{ scope.row.username }}</p>
+            <p>姓名: {{ scope.row.user_name }}</p>
             <p>邮箱: {{ scope.row.email }}</p>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium">{{ scope.row.username }}</el-tag>
+              <el-tag size="medium">{{ scope.row.user_name }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -71,8 +71,8 @@
     ></el-pagination>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
       <el-form :model="ruleForm2" :rules="rules" ref="ruleForm2">
-        <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="ruleForm2.username" autocomplete="off"></el-input>
+        <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
+          <el-input v-model="ruleForm2.userName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="手机号" :label-width="formLabelWidth" prop="mobile">
           <el-input v-model="ruleForm2.mobile" autocomplete="off"></el-input>
@@ -148,7 +148,7 @@ export default {
       dialogType: "",
       dialogTitle: "",
       ruleForm2: {
-        username: "",
+        userName: "",
         mobile: "",
         email: "",
         roleids: [],
@@ -158,7 +158,7 @@ export default {
       roleList: [],
       formLabelWidth: "120px",
       rules: {
-        username: [{ required: true, message: "用户名不能为空" }],
+        userName: [{ required: true, message: "用户名不能为空" }],
         mobile: [{ required: true, message: "手机不能为空" }],
         email: [{ required: true, message: "邮箱不能为空" }],
         roleids: [{ required: true, message: "角色不能为空" }]
@@ -182,7 +182,7 @@ export default {
       this.dialogFormVisible = true;
       detail(this.editId).then(res => {
         let detail = res.data.detail;
-        this.ruleForm2.username = detail.username;
+        this.ruleForm2.userName = detail.user_name;
         this.ruleForm2.mobile = detail.mobile;
         this.ruleForm2.email = detail.email;
         this.ruleForm2.roleids = detail.role;

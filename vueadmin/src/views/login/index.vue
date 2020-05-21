@@ -12,15 +12,15 @@
         <h3 class="title">后台登录</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="userName">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
+          ref="userName"
+          v-model="loginForm.userName"
           placeholder="用户名"
-          name="username"
+          name="userName"
           type="text"
           tabindex="1"
           auto-complete="on"
@@ -63,13 +63,12 @@
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
 
 export default {
   name: "Login",
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+    const validateUserName = (rule, value, callback) => {
+      if (!value) {
         callback(new Error("请输入用户名"));
       } else {
         callback();
@@ -84,12 +83,12 @@ export default {
     };
     return {
       loginForm: {
-        username: "",
+        userName: "",
         password: ""
       },
       loginRules: {
-        username: [
-          { required: true, trigger: "blur", validator: validateUsername }
+        userName: [
+          { required: true, trigger: "blur", validator: validateUserName }
         ],
         password: [
           { required: true, trigger: "blur", validator: validatePassword }

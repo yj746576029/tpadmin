@@ -9,9 +9,7 @@ class RoleController extends BaseController
     public function index()
     {
         $list = M('Role')->select();
-        $this->assign('empty','<tr class="text-c"><td colspan="4">数据为空</td></tr>');
-        $this->assign('list', $list);
-        $this->display();
+        json(1, ['list' => $list]);
     }
     
     public function add()

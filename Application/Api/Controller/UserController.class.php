@@ -20,10 +20,10 @@ class UserController extends BaseController
             $condition['end_time'] = array('elt', $e);
         }
         if (!empty(I('get.keywords'))) {
-            $condition['username'] = array('like', '%' . I('get.keywords') . '%');
+            $condition['user_name'] = array('like', '%' . I('get.keywords') . '%');
         }
         $total = M('User')->where($condition)->count();
-        $list = D('User')->field('id,username,mobile,email,create_time')->relation(true)->where($condition)->page($page . ',' . $pageSize)->select();
+        $list = D('User')->field('id,user_name,mobile,email,create_time')->relation(true)->where($condition)->page($page . ',' . $pageSize)->select();
         foreach ($list as &$v) {
             $v['create_time'] = date('Y-m-d H:i:s', $v['create_time']);
         }
@@ -35,7 +35,7 @@ class UserController extends BaseController
     public function add()
     {
         if (IS_POST) {
-            $data['username'] = I('post.username');
+            $data['user_name'] = I('post.userName');
             $data['salt'] = substr(md5(uniqid(true)), 0, 4);
             if (!empty(I('post.password'))) {
                 $data['password'] = md5(md5(I('post.password')) . $data['salt']);
@@ -76,7 +76,7 @@ class UserController extends BaseController
         if (IS_POST) {
             M()->startTrans();
             $id = I('post.id');
-            $data['username'] = I('post.username');
+            $data['user_name'] = I('post.userName');
             if (!empty(I('post.password'))) {
                 $data['salt'] = substr(md5(uniqid(true)), 0, 4);
                 $data['password'] = md5(md5(I('post.password')) . $data['salt']);

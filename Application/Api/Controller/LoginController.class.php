@@ -14,9 +14,9 @@ class LoginController extends Controller
     public function index()
     {
         if (IS_POST) {
-            $username = I('post.username');
+            $userName = I('post.userName');
             $password = I('post.password');
-            $user = M('User')->where(['username' => $username])->find();
+            $user = M('User')->where(['user_name' => $userName])->find();
             if (!$user) {
                 json(0,'用户不存在');
             } else {
