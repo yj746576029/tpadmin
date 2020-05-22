@@ -47,11 +47,27 @@
           <el-radio v-model="ruleForm2.status" label="0">关闭</el-radio>
         </el-form-item>
         <el-form-item label="权限" :label-width="formLabelWidth" prop="authids">
-          <div v-for="(item, i) in authList" :key="i">
-            <el-checkbox :label="item.id">{{item.auth_name}}</el-checkbox>
-            <div v-for="(item2, i2) in item.children" :key="i2">
-              &emsp;<el-checkbox :label="item2.id">{{item2.auth_name}}</el-checkbox>
-              <el-checkbox v-for="(item3, i3) in item2.children" :key="i3" :label="item3.id">{{item3.auth_name}}</el-checkbox>
+          <div v-for="(item, i) in authListTree" :key="i">
+            <el-checkbox
+              v-model="ruleForm2.authids"
+              :label="item.id"
+              @change="(e)=>level1(e,item.id)"
+            >{{item.auth_name}}</el-checkbox>
+            <div v-for="(item2, i2) in item.children" :key="i2" style="padding-left:20px;">
+              <el-checkbox
+                v-model="ruleForm2.authids"
+                :label="item2.id"
+                @change="(e)=>level2(e,item2.id,item.id)"
+              >{{item2.auth_name}}</el-checkbox>
+              <div style="padding-left:20px;">
+                <el-checkbox
+                  v-for="(item3, i3) in item2.children"
+                  :key="i3"
+                  v-model="ruleForm2.authids"
+                  :label="item3.id"
+                  @change="(e)=>level3(e,item3.id,item2.id,item.id)"
+                >{{item3.auth_name}}</el-checkbox>
+              </div>
             </div>
           </div>
         </el-form-item>
@@ -82,10 +98,12 @@ export default {
       dialogTitle: "",
       ruleForm2: {
         roleName: "",
-        status: "1"
+        status: "1",
+        authids: []
       },
       editId: 0,
       authList: [],
+      authListTree: [],
       formLabelWidth: "120px",
       rules: {
         roleName: [{ required: true, message: "角色名不能为空" }]
@@ -139,6 +157,7 @@ export default {
           this.total = res.data.total;
           this.pageSize = res.data.page_size;
           this.authList = res.data.auth_list;
+          this.authListTree = res.data.auth_list_tree;
           this.loading = false;
         })
         .catch(() => {
@@ -183,6 +202,91 @@ export default {
           return false;
         }
       });
+    },
+    level1(e, id) {
+      let authids = this.ruleForm2.authids;
+      let authList = this.authList;
+      authList.map(v => {
+        if (e) {
+          if (v.parent_id == id) {
+            !authids.includes(v.id)?authids.push(v.id):'';
+            authList.map(vv => {
+              if (vv.parent_id == v.id) {
+                !authids.includes(vv.id)?authids.push(vv.id):'';
+              }
+            });
+          }
+        } else {
+          if (v.parent_id == id) {
+            authids = authids.filter(item => item != v.id);
+            authList.map(vv => {
+              if (vv.parent_id == v.id) {
+                authids = authids.filter(item2 => item2 != vv.id);
+              }
+            });
+          }
+        }
+      });
+      this.ruleForm2.authids = authids;
+    },
+    level2(e, id, pid) {
+      let authids = this.ruleForm2.authids;
+      let authList = this.authList;
+      authList.map(v => {
+        if (e) {
+          if (v.parent_id == id || v.id == pid) {
+            !authids.includes(v.id)?authids.push(v.id):'';
+          }
+        } else {
+          if (v.parent_id == id) {
+            authids = authids.filter(item => item != v.id);
+            //检测上级还有没有下级被选中
+            let count = 0;
+            authList.map(item => {
+              if (item.parent_id == pid) {
+                authids.includes(item.id) ? ++count : "";
+              }
+            });
+            if (count == 0) {
+              authids = authids.filter(item => item != pid);
+            }
+          }
+        }
+      });
+      this.ruleForm2.authids = authids;
+    },
+    level3(e, id, pid1, pid2) {
+      let authids = this.ruleForm2.authids;
+      let authList = this.authList;
+      authList.map(v => {
+        if (e) {
+          if (v.parent_id == id || v.id == pid1 || v.id == pid2) {
+            !authids.includes(v.id)?authids.push(v.id):'';
+          }
+        } else {
+          //检测上级还有没有下级被选中
+          let count1 = 0;
+          authList.map(item => {
+            if (item.parent_id == pid1) {
+              authids.includes(item.id) ? ++count1 : "";
+            }
+          });
+          if (count1 == 0) {
+            authids = authids.filter(item => item != pid1);
+          }
+          //检测上上级还有没有下级被选中
+          let count2 = 0;
+          authList.map(item => {
+            if (item.parent_id == pid2) {
+              authids.includes(item.id) ? ++count2 : "";
+            }
+          });
+          if (count2 == 0) {
+            authids = authids.filter(item => item != pid2);
+          }
+        }
+      });
+      this.ruleForm2.authids = authids;
     }
   }
 };

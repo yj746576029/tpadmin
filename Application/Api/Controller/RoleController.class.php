@@ -12,9 +12,9 @@ class RoleController extends BaseController
         $pageSize = 10;
         $total = M('User')->count();
         $list = M('Role')->page($page . ',' . $pageSize)->select();
-        $authList = M('Auth')->field('id,auth_name,parent_id')->where(['status' => 1])->select();
-        $authList = list_to_tree($authList);
-        json(1, ['list' => $list, 'total' => $total * 1, 'page' => $page, 'page_size' => $pageSize, 'auth_list' => $authList]);
+        $authList1 = M('Auth')->field('id,auth_name,parent_id')->where(['status' => 1])->select();
+        $authList2 = list_to_tree($authList1);
+        json(1, ['list' => $list, 'total' => $total * 1, 'page' => $page, 'page_size' => $pageSize, 'auth_list' => $authList1,'auth_list_tree' => $authList2]);
     }
 
     public function add()
