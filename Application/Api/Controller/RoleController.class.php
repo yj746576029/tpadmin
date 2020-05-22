@@ -8,10 +8,15 @@ class RoleController extends BaseController
 {
     public function index()
     {
-        $list = M('Role')->select();
-        json(1, ['list' => $list]);
+        $page = empty(I('get.page')) ? 1 : I('get.page');
+        $pageSize = 10;
+        $total = M('User')->count();
+        $list = M('Role')->page($page . ',' . $pageSize)->select();
+        $authList = M('Auth')->field('id,auth_name,parent_id')->where(['status' => 1])->select();
+        $authList = list_to_tree($authList);
+        json(1, ['list' => $list, 'total' => $total * 1, 'page' => $page, 'page_size' => $pageSize, 'auth_list' => $authList]);
     }
-    
+
     public function add()
     {
         if (IS_POST) {
@@ -23,16 +28,16 @@ class RoleController extends BaseController
             $re = D('Role')->add($data);
             if ($re) {
                 $auth_ids = I('post.auth_ids');
-                $dataList=[];
-                foreach($auth_ids as $v){
-                    $item=array('role_id'=>$re,'auth_id'=>$v);
-                    array_push($dataList,$item);
+                $dataList = [];
+                foreach ($auth_ids as $v) {
+                    $item = array('role_id' => $re, 'auth_id' => $v);
+                    array_push($dataList, $item);
                 }
                 $res = D('RoleAuth')->addAll($dataList);
-                if($res){
+                if ($res) {
                     M()->commit();
                     $this->success('新增成功', U('admin/role/index'));
-                }else{
+                } else {
                     M()->rollback();
                     $this->error('新增失败');
                 }
@@ -52,37 +57,37 @@ class RoleController extends BaseController
     {
         if (IS_POST) {
             M()->startTrans();
-            if(IS_AJAX){
+            if (IS_AJAX) {
                 $id = I('post.id');
                 $data['status'] = I('post.status');
                 $data['update_time'] = time();
                 $re = M('Role')->where(['id' => $id])->save($data);
                 if ($re) {
                     M()->commit();
-                    $this->ajaxReturn(['code'=>1,'msg'=>'成功']);
+                    $this->ajaxReturn(['code' => 1, 'msg' => '成功']);
                 } else {
                     M()->rollback();
-                    $this->ajaxReturn(['code'=>0,'msg'=>'失败']);
+                    $this->ajaxReturn(['code' => 0, 'msg' => '失败']);
                 }
-            }else{
+            } else {
                 $id = I('post.id');
                 $data['role_name'] = I('post.role_name');
                 $data['status'] = I('post.status');
                 $data['update_time'] = time();
                 $re = M('Role')->where(['id' => $id])->save($data);
                 if ($re) {
-                    D('RoleAuth')->where(['role_id'=>$id])->delete();
+                    D('RoleAuth')->where(['role_id' => $id])->delete();
                     $auth_ids = I('post.auth_ids');
-                    $dataList=[];
-                    foreach($auth_ids as $v){
-                        $item=array('role_id'=>$id,'auth_id'=>$v);
-                        array_push($dataList,$item);
+                    $dataList = [];
+                    foreach ($auth_ids as $v) {
+                        $item = array('role_id' => $id, 'auth_id' => $v);
+                        array_push($dataList, $item);
                     }
                     $res = D('RoleAuth')->addAll($dataList);
-                    if($res){
+                    if ($res) {
                         M()->commit();
                         $this->success('编辑成功', U('admin/role/index'));
-                    }else{
+                    } else {
                         M()->rollback();
                         $this->error('编辑失败');
                     }
@@ -94,11 +99,11 @@ class RoleController extends BaseController
         } else {
             $id = I('get.id');
             $role = D('Role')->relation(true)->where(['id' => $id])->find();
-            $auth_ids=[];
-            foreach($role['auth'] as $v){
-                array_push($auth_ids,$v['id']);
+            $auth_ids = [];
+            foreach ($role['auth'] as $v) {
+                array_push($auth_ids, $v['id']);
             }
-            $role['auth']=$auth_ids;
+            $role['auth'] = $auth_ids;
             $authList = M('Auth')->field('id,auth_name,status,rule,parent_id,create_time,update_time')->select();
             $list = list_to_tree($authList);
             $this->assign('list', $list);
@@ -113,13 +118,12 @@ class RoleController extends BaseController
         M()->startTrans();
         $res = M('Role')->where(['id' => $id])->delete();
         if ($res) {
-            D('RoleAuth')->where(['role_id'=>$id])->delete();
+            D('RoleAuth')->where(['role_id' => $id])->delete();
             M()->commit();
             $this->success('删除成功', U('admin/Role/index'));
         } else {
             M()->rollback();
             $this->error('删除失败');
         }
-        
     }
 }

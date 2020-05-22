@@ -123,7 +123,7 @@ INSERT INTO `tp_role_auth` VALUES (2, 16);
 DROP TABLE IF EXISTS `tp_user`;
 CREATE TABLE `tp_user`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `account` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '账号',
+  `user_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户名，账号',
   `password` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '密码=md5(md5(密码)密码盐)',
   `salt` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '密码盐（随机生成）',
   `realname` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '真实姓名',
