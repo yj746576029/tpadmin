@@ -53,16 +53,16 @@ class RoleController extends BaseController
         if (IS_POST) {
             M()->startTrans();
             $id = I('post.id');
-            if (I('post.roleName')!='') {
+            if (I('post.roleName') != '') {
                 $data['role_name'] = I('post.roleName');
             }
-            if (I('post.status')!='') {
+            if (I('post.status') != '') {
                 $data['status'] = I('post.status');
             }
             $data['update_time'] = time();
             $re = M('Role')->where(['id' => $id])->save($data);
             if ($re) {
-                if (I('post.authids')) {
+                if (!empty(I('post.authids'))) {
                     D('RoleAuth')->where(['role_id' => $id])->delete();
                     $auth_ids = I('post.authids');
                     $dataList = [];
@@ -72,6 +72,8 @@ class RoleController extends BaseController
                     }
                     $res = D('RoleAuth')->addAll($dataList);
                     if ($res) {
+                        M()->commit();
+                        json(1);
                     } else {
                         M()->rollback();
                         json(1, '编辑失败');
