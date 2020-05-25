@@ -82,6 +82,47 @@ if (!function_exists('authcode')) {
     // echo authcode($authcode, 'DECODE', $key, 0); //解密
 }
 
+if (!function_exists('auth_list')) {
+    function auth_list()
+    {
+        $uid = authcode($_SERVER['HTTP_X_TOKEN']);
+        $user = D('User')->relation(true)->where(['id' => $uid])->find();
+        if ($user['is_super'] != 1) {
+            $roleIds = [];
+            foreach ($user['role'] as $v) {
+                if ($v['status'] == 1) {
+                    array_push($roleIds, $v['id']);
+                }
+            }
+            $roleIdsStr = implode(',', $roleIds);
+            $roleArr = D('Role')->relation(true)->where(['id' => ['in', $roleIdsStr]])->select();
+            $authArr = [];
+            foreach ($roleArr as $v) {
+                foreach ($v['auth'] as $vv) {
+                    $d = $vv;
+                    unset($d['create_time'], $d['update_time']);
+                    if ($vv['status'] == 1) {
+                        array_push($authArr, $d);
+                    }
+                }
+            }
+            $list = array_unique($authArr, SORT_REGULAR);
+        } else {
+            $authList = M('Auth')->select();
+            $authArr = [];
+            foreach ($authList as $vv) {
+                $d = $vv;
+                unset($d['create_time'], $d['update_time']);
+                if ($vv['status'] == 1) {
+                    array_push($authArr, $d);
+                }
+            }
+            $list = array_unique($authArr, SORT_REGULAR);
+        }
+        return $list;
+    }
+}
+
 if (!function_exists('json')) {
     function json($code, $param = null)
     {

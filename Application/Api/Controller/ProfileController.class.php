@@ -11,7 +11,7 @@ class ProfileController extends BaseController
         if (IS_GET) {
             $uid = $this->uid;
             $user = M('User')->field('user_name')->where(['id' => $uid])->find();
-            json(1, ['name' => $user['user_name'], 'avatar' => 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png']);
+            json(1, ['name' => $user['user_name'], 'avatar' => 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png','routers'=>list_to_tree(auth_list())]);
         }
     }
 
