@@ -11,8 +11,18 @@
       </el-table-column>
       <el-table-column label="状态">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status==1" size="mini" type="success">已启用</el-button>
-          <el-button v-if="scope.row.status==0" size="mini" type="info">已停用</el-button>
+          <el-button
+            v-if="scope.row.status==1"
+            size="mini"
+            type="success"
+            @click="status(scope.row.id,0)"
+          >已启用</el-button>
+          <el-button
+            v-if="scope.row.status==0"
+            size="mini"
+            type="info"
+            @click="status(scope.row.id,1)"
+          >已停用</el-button>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -127,9 +137,8 @@ export default {
       this.dialogFormVisible = true;
       detail(this.editId).then(res => {
         let detail = res.data.detail;
-        this.ruleForm2.username = detail.username;
-        this.ruleForm2.mobile = detail.mobile;
-        this.ruleForm2.email = detail.email;
+        this.ruleForm2.roleName = detail.role_name;
+        this.ruleForm2.status = detail.status;
         this.ruleForm2.authids = detail.auth;
       });
     },
@@ -140,6 +149,7 @@ export default {
           type: "success",
           duration: 5 * 1000
         });
+        this.getList();
       });
     },
     handleFilter() {
@@ -167,6 +177,17 @@ export default {
     currentChange(e) {
       this.page = e;
       this.getList();
+    },
+    status(id, status) {
+      let msg = status == 0 ? "禁用成功" : "启用成功";
+      edit({ id, status }).then(res => {
+        this.$message({
+          message: msg,
+          type: "success",
+          duration: 5 * 1000
+        });
+        this.getList();
+      });
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
@@ -209,10 +230,10 @@ export default {
       authList.map(v => {
         if (e) {
           if (v.parent_id == id) {
-            !authids.includes(v.id)?authids.push(v.id):'';
+            !authids.includes(v.id) ? authids.push(v.id) : "";
             authList.map(vv => {
               if (vv.parent_id == v.id) {
-                !authids.includes(vv.id)?authids.push(vv.id):'';
+                !authids.includes(vv.id) ? authids.push(vv.id) : "";
               }
             });
           }
@@ -235,7 +256,7 @@ export default {
       authList.map(v => {
         if (e) {
           if (v.parent_id == id || v.id == pid) {
-            !authids.includes(v.id)?authids.push(v.id):'';
+            !authids.includes(v.id) ? authids.push(v.id) : "";
           }
         } else {
           if (v.parent_id == id) {
@@ -261,7 +282,7 @@ export default {
       authList.map(v => {
         if (e) {
           if (v.parent_id == id || v.id == pid1 || v.id == pid2) {
-            !authids.includes(v.id)?authids.push(v.id):'';
+            !authids.includes(v.id) ? authids.push(v.id) : "";
           }
         } else {
           //检测上级还有没有下级被选中
