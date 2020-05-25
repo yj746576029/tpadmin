@@ -92,7 +92,7 @@ class AuthController extends BaseController
         $id = I('get.id');
         $re = M('Auth')->where(['parent_id' => $id])->find();
         if ($re) {
-            $this->error('当前规则下有子规则，不能直接删除');
+            $this->error('当前规则下有子节点，不能直接删除');
         } else {
             $res = M('Auth')->where(['id' => $id])->delete();
             if ($res) {

@@ -48,24 +48,24 @@
       @current-change="currentChange"
     ></el-pagination>
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
-      <el-form :model="ruleForm2" :rules="rules" ref="ruleForm2">
+      <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
         <el-form-item label="角色名" :label-width="formLabelWidth" prop="roleName">
-          <el-input v-model="ruleForm2.roleName" autocomplete="off"></el-input>
+          <el-input v-model="ruleForm.roleName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="状态" :label-width="formLabelWidth" prop="status">
-          <el-radio v-model="ruleForm2.status" label="1">开启</el-radio>
-          <el-radio v-model="ruleForm2.status" label="0">关闭</el-radio>
+          <el-radio v-model="ruleForm.status" label="1">开启</el-radio>
+          <el-radio v-model="ruleForm.status" label="0">关闭</el-radio>
         </el-form-item>
         <el-form-item label="权限" :label-width="formLabelWidth" prop="authids">
           <div v-for="(item, i) in authListTree" :key="i">
             <el-checkbox
-              v-model="ruleForm2.authids"
+              v-model="ruleForm.authids"
               :label="item.id"
               @change="(e)=>level1(e,item.id)"
             >{{item.auth_name}}</el-checkbox>
             <div v-for="(item2, i2) in item.children" :key="i2" style="padding-left:20px;">
               <el-checkbox
-                v-model="ruleForm2.authids"
+                v-model="ruleForm.authids"
                 :label="item2.id"
                 @change="(e)=>level2(e,item2.id,item.id)"
               >{{item2.auth_name}}</el-checkbox>
@@ -73,7 +73,7 @@
                 <el-checkbox
                   v-for="(item3, i3) in item2.children"
                   :key="i3"
-                  v-model="ruleForm2.authids"
+                  v-model="ruleForm.authids"
                   :label="item3.id"
                   @change="(e)=>level3(e,item3.id,item2.id,item.id)"
                 >{{item3.auth_name}}</el-checkbox>
@@ -84,7 +84,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submitForm('ruleForm2')">确 定</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -106,7 +106,7 @@ export default {
       dialogFormVisible: false,
       dialogType: "",
       dialogTitle: "",
-      ruleForm2: {
+      ruleForm: {
         roleName: "",
         status: "1",
         authids: []
@@ -128,7 +128,7 @@ export default {
       this.dialogType = "add";
       this.dialogTitle = "角色添加";
       this.dialogFormVisible = true;
-      this.$refs["ruleForm2"] ? this.$refs["ruleForm2"].resetFields() : null;
+      this.$refs["ruleForm"] ? this.$refs["ruleForm"].resetFields() : null;
     },
     handleEdit(index, row) {
       this.editId = row.id;
@@ -137,9 +137,9 @@ export default {
       this.dialogFormVisible = true;
       detail(this.editId).then(res => {
         let detail = res.data.detail;
-        this.ruleForm2.roleName = detail.role_name;
-        this.ruleForm2.status = detail.status;
-        this.ruleForm2.authids = detail.auth;
+        this.ruleForm.roleName = detail.role_name;
+        this.ruleForm.status = detail.status;
+        this.ruleForm.authids = detail.auth;
       });
     },
     handleDelete(index, row) {
@@ -151,10 +151,6 @@ export default {
         });
         this.getList();
       });
-    },
-    handleFilter() {
-      this.page = 0;
-      this.getList();
     },
     getList() {
       this.loading = true;
@@ -194,7 +190,7 @@ export default {
         if (valid) {
           let dialogType = this.dialogType;
           if (dialogType == "add") {
-            let params = this.ruleForm2;
+            let params = this.ruleForm;
             add(params).then(res => {
               this.$message({
                 message: "添加成功",
@@ -206,7 +202,7 @@ export default {
             });
           }
           if (dialogType == "edit") {
-            let params = this.ruleForm2;
+            let params = this.ruleForm;
             params.id = this.editId;
             edit(params).then(res => {
               this.$message({
@@ -225,7 +221,7 @@ export default {
       });
     },
     level1(e, id) {
-      let authids = this.ruleForm2.authids;
+      let authids = this.ruleForm.authids;
       let authList = this.authList;
       authList.map(v => {
         if (e) {
@@ -248,10 +244,10 @@ export default {
           }
         }
       });
-      this.ruleForm2.authids = authids;
+      this.ruleForm.authids = authids;
     },
     level2(e, id, pid) {
-      let authids = this.ruleForm2.authids;
+      let authids = this.ruleForm.authids;
       let authList = this.authList;
       authList.map(v => {
         if (e) {
@@ -274,10 +270,10 @@ export default {
           }
         }
       });
-      this.ruleForm2.authids = authids;
+      this.ruleForm.authids = authids;
     },
     level3(e, id, pid1, pid2) {
-      let authids = this.ruleForm2.authids;
+      let authids = this.ruleForm.authids;
       let authList = this.authList;
       authList.map(v => {
         if (e) {
@@ -307,7 +303,7 @@ export default {
           }
         }
       });
-      this.ruleForm2.authids = authids;
+      this.ruleForm.authids = authids;
     }
   }
 };
