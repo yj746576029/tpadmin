@@ -15,7 +15,7 @@ class ProfileController extends BaseController
             $menu=['/login','/404','/','/dashboard'];
             array_push($menu,'/login');
             foreach ($listTree as $v) {
-                if($v['path']&&$v['path']!='/permission/role'){
+                if($v['path']){
                     array_push($menu,$v['path']);
                 }
             }
