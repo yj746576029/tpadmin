@@ -58,7 +58,7 @@ router.beforeEach(async (to, from, next) => {
             }
           })
           router.options.routes = newRoutes
-          router.addRoutes(router.options.routes)
+          // router.addRoutes(router.options.routes)
           next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
