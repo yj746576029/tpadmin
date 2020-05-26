@@ -5,12 +5,13 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import Layout from '@/layout'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/login'] // no redirect whitelist
 
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // start progress bar
   NProgress.start()
 
@@ -34,7 +35,31 @@ router.beforeEach(async(to, from, next) => {
           // get user info
           await store.dispatch('user/getInfo')
 
-          next()
+          // next()
+
+          // by yangjie 过滤掉非用户拥有的权限菜单
+          let storeMenu = store.getters.menu
+          let newRoutes = router.options.routes.filter((item) => {
+            if (storeMenu.includes(item.path)) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+          newRoutes.map((item1) => {
+            if (item1.children) {
+              item1.children = item1.children.filter((item2) => {
+                if (storeMenu.includes(item2.path)) {
+                  return true;
+                } else {
+                  return false;
+                }
+              })
+            }
+          })
+          router.options.routes = newRoutes
+          router.addRoutes(router.options.routes)
+          next({ ...to, replace: true })
         } catch (error) {
           // remove token and go to login page to re-login
           await store.dispatch('user/resetToken')

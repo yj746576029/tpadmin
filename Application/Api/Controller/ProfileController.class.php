@@ -11,7 +11,16 @@ class ProfileController extends BaseController
         if (IS_GET) {
             $uid = $this->uid;
             $user = M('User')->field('user_name')->where(['id' => $uid])->find();
-            json(1, ['name' => $user['user_name'], 'avatar' => 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png','routers'=>list_to_tree(auth_list())]);
+            $listTree = auth_list();
+            $menu=['/login','/404','/','/dashboard'];
+            array_push($menu,'/login');
+            foreach ($listTree as $v) {
+                if($v['path']){
+                    array_push($menu,$v['path']);
+                }
+            }
+            array_push($menu,['path'=>'*','redirect'=>'/404','hidden'=>true]);
+            json(1, ['name' => $user['user_name'], 'avatar' => 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png', 'menu' => $menu]);
         }
     }
 
@@ -28,10 +37,10 @@ class ProfileController extends BaseController
                 if ($re) {
                     json(1);
                 } else {
-                    json(0,'修改失败');
+                    json(0, '修改失败');
                 }
             } else {
-                json(0,'原始密码错误');
+                json(0, '原始密码错误');
             }
         }
     }

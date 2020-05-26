@@ -49,7 +49,7 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [
       {
-        path: 'dashboard',
+        path: '/dashboard',
         name: 'Dashboard',
         component: () => import('@/views/dashboard/index'),
         meta: { title: '仪表盘', icon: 'dashboard' }
@@ -65,19 +65,19 @@ export const constantRoutes = [
     alwaysShow: true,
     children: [
       {
-        path: 'user',
+        path: '/permission/user',
         name: 'User',
         component: () => import('@/views/permission/user/index'),
         meta: { title: '用户管理' }
       },
       {
-        path: 'role',
+        path: '/permission/role',
         name: 'Role',
         component: () => import('@/views/permission/role/index'),
         meta: { title: '角色管理' }
       },
       {
-        path: 'auth',
+        path: '/permission/auth',
         name: 'Auth',
         component: () => import('@/views/permission/auth/index'),
         meta: { title: '规则管理' }
@@ -93,7 +93,7 @@ export const constantRoutes = [
     alwaysShow: true,
     children: [
       {
-        path: 'profile',
+        path: '/system/profile',
         name: 'Profile',
         component: () => import('@/views/system/profile/index'),
         meta: { title: '个人设置' }

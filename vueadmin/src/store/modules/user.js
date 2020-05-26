@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    menu:[]
   }
 }
 
@@ -24,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_MENU: (state, menu) => {
+    state.menu = menu
   }
 }
 
@@ -53,10 +57,12 @@ const actions = {
           reject('验证失败，请重新登录')
         }
 
-        const { name, avatar } = data
+        const { name, avatar,menu } = data
+        console.log(menu)
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_MENU', menu)
         resolve(data)
       }).catch(error => {
         reject(error)
