@@ -17,7 +17,9 @@ class AuthController extends BaseController
     {
         if (IS_POST) {
             $data['auth_name'] = I('post.authName');
-            $data['rule'] = I('post.rule');
+            //linux 如果访问UserType控制器，那就填 user_type
+            //windows 如果访问UserType控制器，那就填 usertype
+            $data['rule'] = strtolower(I('post.rule'));//转成小写
             $data['status'] = I('post.status');
             $pid = I('post.parentId');
             if ($pid == '') {
