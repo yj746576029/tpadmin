@@ -30,6 +30,7 @@ if (!function_exists('list_to_tree')) {
      * @param string $parent_id parent标记字段
      * @param string $child 子集合键名
      * @param int $root 顶级parent_id的值
+     * @return array
      */
     function list_to_tree($list, $pk = 'id', $pid = 'parent_id', $child = 'children', $root = 0)
     {
@@ -78,7 +79,7 @@ if (!function_exists('array_sort')) {
      * @param array $array
      * @param string $key1
      * @param string $key2
-     * @return void
+     * @return array
      */
     function array_sort($array, $key1='sort', $key2 = 'id')
     {
